@@ -1,0 +1,25 @@
+# Entorno virtual
+venv/
+.venv/
+
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+
+# Django
+*.log
+
+# Archivos de entorno
+.env
+
+# Archivos de medios y estáticos generados
+media/
+staticfiles/
+
+# IDE
+.vscode/
+
+# Sistema operativo
+.DS_Store
+Thumbs.db
