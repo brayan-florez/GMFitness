@@ -1,13 +1,15 @@
+
 from django.contrib import admin
 
 from .models import Usuario
-from .forms import UsuarioCreationForm, UsuarioChangeForm
+from .forms import UsuarioChangeForm
 
 
 @admin.register(Usuario)
 class UsuarioAdmin(admin.ModelAdmin):
 
     form = UsuarioChangeForm
+    readonly_fields = ("rol",)
 
     list_display = (
         "nombre",
@@ -33,6 +35,8 @@ class UsuarioAdmin(admin.ModelAdmin):
         "documento",
     )
 
+    ordering = ("nombre", "apellido")
+
     fieldsets = (
         ("Información personal", {
             "fields": (
@@ -45,36 +49,6 @@ class UsuarioAdmin(admin.ModelAdmin):
                 "foto",
             )
         }),
-
-        ("Información de acceso", {
-            "fields": (
-                "correo",
-                "password",
-            )
-        }),
-
-        ("Información del sistema", {
-            "fields": (
-                "rol",
-                "sede",
-                "activo",
-            )
-        }),
-    )
-
-    add_fieldsets = (
-        ("Información personal", {
-            "fields": (
-                "nombre",
-                "apellido",
-                "documento",
-                "fecha_nacimiento",
-                "sexo",
-                "telefono",
-                "foto",
-            )
-        }),
-
         ("Información de acceso", {
             "fields": (
                 "correo",
@@ -82,7 +56,6 @@ class UsuarioAdmin(admin.ModelAdmin):
                 "password2",
             )
         }),
-
         ("Información del sistema", {
             "fields": (
                 "rol",
@@ -92,18 +65,5 @@ class UsuarioAdmin(admin.ModelAdmin):
         }),
     )
 
-    def get_form(self, request, obj=None, **kwargs):
-
-        if obj is None:
-            kwargs["form"] = UsuarioCreationForm
-        else:
-            kwargs["form"] = UsuarioChangeForm
-
-        return super().get_form(request, obj, **kwargs)
-
-    def get_fieldsets(self, request, obj=None):
-
-        if obj is None:
-            return self.add_fieldsets
-
-        return self.fieldsets
+    def has_add_permission(self, request):
+        return False
