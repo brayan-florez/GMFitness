@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Gestión de sedes | GMFitness</title>
+</head>
+<body>
+
+    <h1>Gestión de sedes</h1>
+
+    <!-- Mensajes de confirmación -->
+    {% if messages %}
+        {% for message in messages %}
+            <p>{{ message }}</p>
+        {% endfor %}
+    {% endif %}
+
+    <!-- Enlace para registrar -->
+    <p>
+        <a href="{% url 'crear_sede' %}">Registrar nueva sede</a>
+    </p>
+
+    <hr>
+
+    <!-- Tabla de sedes -->
+    {% if sedes %}
+
+        <table border="1" cellpadding="8">
+            <thead>
+                <tr>
+                    <th>ID</th>
+                    <th>Nombre</th>
+                    <th>Dirección</th>
+                    <th>Teléfono</th>
+                    <th>Estado</th>
+                    <th>Acciones</th>
+                </tr>
+            </thead>
+
+            <tbody>
+                {% for sede in sedes %}
+                    <tr>
+                        <td>{{ sede.id }}</td>
+                        <td>{{ sede.nombre }}</td>
+                        <td>{{ sede.direccion }}</td>
+                        <td>{{ sede.telefono|default:"No registrado" }}</td>
+
+                        <td>
+                            {% if sede.activo %}
+                                Activa
+                            {% else %}
+                                Inactiva
+                            {% endif %}
+                        </td>
+
+                        <td>
+                            <a href="{% url 'editar_sede' sede.id %}">
+                                Editar
+                            </a>
+
+                            |
+
+                            <a href="{% url 'eliminar_sede' sede.id %}">
+                                Eliminar
+                            </a>
+                        </td>
+                    </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+
+    {% else %}
+
+        <p>No hay sedes registradas.</p>
+
+    {% endif %}
+
+</body>
+</html>
