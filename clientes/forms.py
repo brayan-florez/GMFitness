@@ -1,7 +1,7 @@
 
 from django import forms
 
-from .models import Cliente
+from .models import Cliente, Objetivo
 from usuarios.models import Usuario
 from gimnasios.models import Sede
 
@@ -94,3 +94,22 @@ class ClienteCreationForm(forms.ModelForm):
             )
 
         return cleaned_data
+
+
+class ObjetivoForm(forms.ModelForm):
+
+    class Meta:
+        model = Objetivo
+        fields = ("nombre", "descripcion", "activo")
+        labels = {
+            "nombre": "Nombre del objetivo",
+            "descripcion": "Descripción",
+            "activo": "Objetivo activo",
+        }
+        widgets = {
+            "nombre": forms.TextInput(attrs={"class": "form-control"}),
+            "descripcion": forms.Textarea(
+                attrs={"class": "form-control", "rows": 4}
+            ),
+            "activo": forms.CheckboxInput(attrs={"class": "form-check-input"}),
+        }

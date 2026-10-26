@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Gestión de ejercicios | GMFitness</title>
+</head>
+<body>
+
+    <h1>Gestión de ejercicios</h1>
+
+    {% if messages %}
+        {% for message in messages %}
+            <p>{{ message }}</p>
+        {% endfor %}
+    {% endif %}
+
+    <p>
+        <a href="{% url 'crear_ejercicio' %}">Registrar nuevo ejercicio</a>
+    </p>
+
+    <hr>
+
+    {% if ejercicios %}
+        <table border="1" cellpadding="8">
+            <thead>
+                <tr>
+                    <th>ID</th>
+                    <th>Nombre</th>
+                    <th>Grupo muscular</th>
+                    <th>Dificultad</th>
+                    <th>Imagen</th>
+                    <th>Estado</th>
+                    <th>Acciones</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for ejercicio in ejercicios %}
+                    <tr>
+                        <td>{{ ejercicio.id }}</td>
+                        <td>{{ ejercicio.nombre }}</td>
+                        <td>{{ ejercicio.grupo_muscular }}</td>
+                        <td>{{ ejercicio.get_dificultad_display }}</td>
+                        <td>
+                            {% if ejercicio.imagen %}
+                                <img src="{{ ejercicio.imagen.url }}"
+                                     alt="{{ ejercicio.nombre }}"
+                                     width="100">
+                            {% else %}
+                                Sin imagen
+                            {% endif %}
+                        </td>
+                        <td>
+                            {% if ejercicio.activo %}
+                                Activo
+                            {% else %}
+                                Inactivo
+                            {% endif %}
+                        </td>
+                        <td>
+                            <a href="{% url 'editar_ejercicio' ejercicio.id %}">Editar</a>
+                            |
+                            <a href="{% url 'eliminar_ejercicio' ejercicio.id %}">Eliminar</a>
+                        </td>
+                    </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    {% else %}
+        <p>No hay ejercicios registrados.</p>
+    {% endif %}
+
+</body>
+</html>

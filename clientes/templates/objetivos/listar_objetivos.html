@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Gestión de objetivos | GMFitness</title>
+</head>
+<body>
+
+    <h1>Gestión de objetivos</h1>
+
+    {% if messages %}
+        {% for message in messages %}
+            <p>{{ message }}</p>
+        {% endfor %}
+    {% endif %}
+
+    <p>
+        <a href="{% url 'crear_objetivo' %}">Registrar nuevo objetivo</a>
+    </p>
+
+    <hr>
+
+    {% if objetivos %}
+        <table border="1" cellpadding="8">
+            <thead>
+                <tr>
+                    <th>ID</th>
+                    <th>Nombre</th>
+                    <th>Descripción</th>
+                    <th>Estado</th>
+                    <th>Acciones</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for objetivo in objetivos %}
+                    <tr>
+                        <td>{{ objetivo.id }}</td>
+                        <td>{{ objetivo.nombre }}</td>
+                        <td>{{ objetivo.descripcion|default:"No registrada" }}</td>
+                        <td>
+                            {% if objetivo.activo %}
+                                Activo
+                            {% else %}
+                                Inactivo
+                            {% endif %}
+                        </td>
+                        <td>
+                            <a href="{% url 'editar_objetivo' objetivo.id %}">Editar</a>
+                            |
+                            <a href="{% url 'eliminar_objetivo' objetivo.id %}">Eliminar</a>
+                        </td>
+                    </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    {% else %}
+        <p>No hay objetivos registrados.</p>
+    {% endif %}
+
+</body>
+</html>
