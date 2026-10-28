@@ -1,0 +1,14 @@
+{% extends "base.html" %}
+{% block title %}Inicio | GMFitness{% endblock %}
+{% block content %}
+<section class="panel">
+    <h1>Bienvenido a GMFitness</h1>
+    <p>Administra la información de sedes, clientes, entrenamientos y nutrición desde un solo lugar.</p>
+</section>
+<section class="grid" style="margin-top: 1rem">
+    <article class="panel"><h2>Sedes</h2><p>Consulta y administra las sedes del gimnasio.</p><a class="button" href="{% url 'listar_sedes' %}">Abrir sedes</a></article>
+    <article class="panel"><h2>Objetivos</h2><p>Define los objetivos disponibles para los clientes.</p><a class="button" href="{% url 'listar_objetivos' %}">Abrir objetivos</a></article>
+    <article class="panel"><h2>Entrenamientos</h2><p>Gestiona el catálogo de ejercicios.</p><a class="button" href="{% url 'listar_ejercicios' %}">Abrir ejercicios</a></article>
+    <article class="panel"><h2>Nutrición</h2><p>Gestiona el catálogo de alimentos.</p><a class="button" href="{% url 'listar_alimentos' %}">Abrir alimentos</a></article>
+</section>
+{% endblock %}

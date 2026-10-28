@@ -1,9 +1,13 @@
+import logging
+
 from django.db import IntegrityError
 from django.contrib import messages
 from django.shortcuts import render, redirect, get_object_or_404
 
 from .forms import ObjetivoForm
 from .models import Objetivo
+
+logger = logging.getLogger(__name__)
 
 
 # Listar todos los objetivos
@@ -23,9 +27,15 @@ def crear_objetivo(request):
         form = ObjetivoForm(request.POST)
 
         if form.is_valid():
-            form.save()
-            messages.success(request, "El objetivo se registró correctamente.")
-            return redirect("listar_objetivos")
+            try:
+                form.save()
+                messages.success(request, "El objetivo se registró correctamente.")
+                return redirect("listar_objetivos")
+            except IntegrityError:
+                form.add_error(None, "Ya existe un objetivo con ese nombre.")
+            except Exception:
+                logger.exception("Error al registrar un objetivo")
+                form.add_error(None, "No fue posible registrar el objetivo. Inténtalo de nuevo.")
 
     else:
         form = ObjetivoForm()
@@ -47,9 +57,15 @@ def editar_objetivo(request, id):
         form = ObjetivoForm(request.POST, instance=objetivo)
 
         if form.is_valid():
-            form.save()
-            messages.success(request, "El objetivo se actualizó correctamente.")
-            return redirect("listar_objetivos")
+            try:
+                form.save()
+                messages.success(request, "El objetivo se actualizó correctamente.")
+                return redirect("listar_objetivos")
+            except IntegrityError:
+                form.add_error(None, "Ya existe un objetivo con ese nombre.")
+            except Exception:
+                logger.exception("Error al actualizar el objetivo %s", id)
+                form.add_error(None, "No fue posible actualizar el objetivo. Inténtalo de nuevo.")
 
     else:
         form = ObjetivoForm(instance=objetivo)
@@ -79,6 +95,10 @@ def eliminar_objetivo(request, id):
                 "No se pudo eliminar el objetivo porque está relacionado "
                 "con otros registros."
             )
+            return redirect("listar_objetivos")
+        except Exception:
+            logger.exception("Error al eliminar el objetivo %s", id)
+            messages.error(request, "No fue posible eliminar el objetivo. Inténtalo de nuevo.")
             return redirect("listar_objetivos")
 
         messages.success(

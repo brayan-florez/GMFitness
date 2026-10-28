@@ -1,13 +1,7 @@
-<!DOCTYPE html>
-<html lang="es">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Eliminar objetivo | GMFitness</title>
-</head>
-<body>
-
-    <h1>Eliminar objetivo</h1>
+{% extends "base.html" %}
+{% block title %}Eliminar objetivo | GMFitness{% endblock %}
+{% block content %}
+<h1>Eliminar objetivo</h1>
 
     <p>
         ¿Estás seguro de que deseas eliminar el objetivo
@@ -23,6 +17,4 @@
         <button type="submit">Confirmar eliminación</button>
         <a href="{% url 'listar_objetivos' %}">Cancelar</a>
     </form>
-
-</body>
-</html>
+{% endblock %}

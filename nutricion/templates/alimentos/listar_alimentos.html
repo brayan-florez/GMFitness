@@ -1,21 +1,8 @@
-<!DOCTYPE html>
-<html lang="es">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Gestión de alimentos | GMFitness</title>
-</head>
-<body>
-
-    <h1>Gestión de alimentos</h1>
-
-    {% if messages %}
-        {% for message in messages %}
-            <p>{{ message }}</p>
-        {% endfor %}
-    {% endif %}
-
-    <p>
+{% extends "base.html" %}
+{% block title %}Gestión de alimentos | GMFitness{% endblock %}
+{% block content %}
+<h1>Gestión de alimentos</h1>
+<p>
         <a href="{% url 'crear_alimento' %}">Registrar nuevo alimento</a>
     </p>
 
@@ -57,6 +44,4 @@
     {% else %}
         <p>No hay alimentos registrados.</p>
     {% endif %}
-
-</body>
-</html>
+{% endblock %}

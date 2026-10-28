@@ -1,13 +1,7 @@
-<!DOCTYPE html>
-<html lang="es">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Eliminar alimento | GMFitness</title>
-</head>
-<body>
-
-    <h1>Eliminar alimento</h1>
+{% extends "base.html" %}
+{% block title %}Eliminar alimento | GMFitness{% endblock %}
+{% block content %}
+<h1>Eliminar alimento</h1>
 
     <p>
         ¿Estás seguro de que deseas eliminar el alimento
@@ -23,6 +17,4 @@
         <button type="submit">Confirmar eliminación</button>
         <a href="{% url 'listar_alimentos' %}">Cancelar</a>
     </form>
-
-</body>
-</html>
+{% endblock %}

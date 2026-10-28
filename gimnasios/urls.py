@@ -2,6 +2,7 @@ from django.urls import path
 from . import views
 
 urlpatterns = [
+    path('', views.inicio, name='inicio'),
     # CRUD de sedes
     path('sedes/', views.listar_sedes, name='listar_sedes'),
     path('sedes/crear/', views.crear_sede, name='crear_sede'),

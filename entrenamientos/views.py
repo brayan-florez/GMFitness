@@ -1,8 +1,13 @@
+import logging
+
 from django.contrib import messages
+from django.db import IntegrityError
 from django.shortcuts import render, redirect, get_object_or_404
 
 from .forms import EjercicioForm
 from .models import Ejercicio
+
+logger = logging.getLogger(__name__)
 
 
 # Listar todos los ejercicios
@@ -21,9 +26,15 @@ def crear_ejercicio(request):
         form = EjercicioForm(request.POST, request.FILES)
 
         if form.is_valid():
-            form.save()
-            messages.success(request, "El ejercicio se registró correctamente.")
-            return redirect("listar_ejercicios")
+            try:
+                form.save()
+                messages.success(request, "El ejercicio se registró correctamente.")
+                return redirect("listar_ejercicios")
+            except IntegrityError:
+                form.add_error(None, "Ya existe un ejercicio con ese nombre.")
+            except Exception:
+                logger.exception("Error al registrar un ejercicio")
+                form.add_error(None, "No fue posible registrar el ejercicio. Inténtalo de nuevo.")
     else:
         form = EjercicioForm()
 
@@ -42,9 +53,15 @@ def editar_ejercicio(request, id):
         form = EjercicioForm(request.POST, request.FILES, instance=ejercicio)
 
         if form.is_valid():
-            form.save()
-            messages.success(request, "El ejercicio se actualizó correctamente.")
-            return redirect("listar_ejercicios")
+            try:
+                form.save()
+                messages.success(request, "El ejercicio se actualizó correctamente.")
+                return redirect("listar_ejercicios")
+            except IntegrityError:
+                form.add_error(None, "Ya existe un ejercicio con ese nombre.")
+            except Exception:
+                logger.exception("Error al actualizar el ejercicio %s", id)
+                form.add_error(None, "No fue posible actualizar el ejercicio. Inténtalo de nuevo.")
     else:
         form = EjercicioForm(instance=ejercicio)
 
@@ -65,20 +82,26 @@ def eliminar_ejercicio(request, id):
     ejercicio = get_object_or_404(Ejercicio, pk=id)
 
     if request.method == "POST":
-        if ejercicio.rutinas.exists():
-            messages.error(
-                request,
-                "No se puede eliminar este ejercicio porque está incluido "
-                "en una o más rutinas."
-            )
-            return redirect("listar_ejercicios")
+        try:
+            if ejercicio.rutinas.exists():
+                messages.error(
+                    request,
+                    "No se puede eliminar este ejercicio porque está incluido "
+                    "en una o más rutinas."
+                )
+                return redirect("listar_ejercicios")
 
-        nombre = ejercicio.nombre
-        ejercicio.delete()
-        messages.success(
-            request,
-            f"El ejercicio '{nombre}' se eliminó correctamente."
-        )
+            nombre = ejercicio.nombre
+            ejercicio.delete()
+            messages.success(
+                request,
+                f"El ejercicio '{nombre}' se eliminó correctamente."
+            )
+        except IntegrityError:
+            messages.error(request, "No se pudo eliminar el ejercicio porque tiene registros relacionados.")
+        except Exception:
+            logger.exception("Error al eliminar el ejercicio %s", id)
+            messages.error(request, "No fue posible eliminar el ejercicio. Inténtalo de nuevo.")
         return redirect("listar_ejercicios")
 
     return render(
