@@ -4,12 +4,15 @@ from django.db import IntegrityError
 from django.contrib import messages
 from django.shortcuts import render, redirect, get_object_or_404
 
+from usuarios.decorators import rol_requerido
+
 from .forms import ObjetivoForm
 from .models import Objetivo
 
 logger = logging.getLogger(__name__)
 
 
+@rol_requerido('ADMIN')
 # Listar todos los objetivos
 def listar_objetivos(request):
     objetivos = Objetivo.objects.all().order_by("nombre")
@@ -21,6 +24,7 @@ def listar_objetivos(request):
     return render(request, "objetivos/listar_objetivos.html", contexto)
 
 
+@rol_requerido('ADMIN')
 # Registrar un objetivo
 def crear_objetivo(request):
     if request.method == "POST":
@@ -49,6 +53,7 @@ def crear_objetivo(request):
     return render(request, "objetivos/formulario_objetivo.html", contexto)
 
 
+@rol_requerido('ADMIN')
 # Editar un objetivo
 def editar_objetivo(request, id):
     objetivo = get_object_or_404(Objetivo, pk=id)
@@ -80,6 +85,7 @@ def editar_objetivo(request, id):
     return render(request, "objetivos/formulario_objetivo.html", contexto)
 
 
+@rol_requerido('ADMIN')
 # Eliminar un objetivo con confirmación
 def eliminar_objetivo(request, id):
     objetivo = get_object_or_404(Objetivo, pk=id)

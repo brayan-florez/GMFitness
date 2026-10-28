@@ -25,7 +25,7 @@ SECRET_KEY = 'django-insecure-(koxa-xrv*sm^1dv%q_(+s*zlj=z&63=^o@&l^7kori)w_=t0_
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ['localhost', '127.0.0.1', '0.0.0.0', '[::1]', 'testserver']
 
 
 # Application definition
@@ -105,6 +105,13 @@ AUTH_PASSWORD_VALIDATORS = [
     },
 ]
 
+AUTHENTICATION_BACKENDS = [
+    'usuarios.backends.EmailBackend',
+]
+
+LOGIN_URL = 'login'
+LOGIN_REDIRECT_URL = 'dashboard'
+LOGOUT_REDIRECT_URL = 'login'
 
 # Internationalization
 # https://docs.djangoproject.com/en/6.1/topics/i18n/

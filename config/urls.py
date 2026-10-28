@@ -7,6 +7,9 @@ urlpatterns = [
     # Panel de administración de Django
     path('admin/', admin.site.urls),
 
+    # Autenticación de usuarios
+    path('', include('usuarios.urls')),
+
     # Página de inicio y gestión de sedes
     path('', include('gimnasios.urls')),
 

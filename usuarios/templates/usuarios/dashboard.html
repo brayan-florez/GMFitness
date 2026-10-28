@@ -1,0 +1,12 @@
+{% extends 'base.html' %}
+
+{% block title %}Panel | GMFitness{% endblock %}
+
+{% block content %}
+<section class="panel">
+    <h1>Panel de {{ rol|lower }}</h1>
+    <p>Bienvenido, {{ usuario.nombre }} {{ usuario.apellido }}.</p>
+    <p>Tu rol actual es: <strong>{{ rol }}</strong></p>
+    <a class="button" href="{% url 'logout' %}">Cerrar sesión</a>
+</section>
+{% endblock %}

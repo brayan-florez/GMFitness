@@ -4,12 +4,15 @@ from django.contrib import messages
 from django.db import IntegrityError
 from django.shortcuts import render, redirect, get_object_or_404
 
+from usuarios.decorators import rol_requerido
+
 from .forms import AlimentoForm
 from .models import Alimento
 
 logger = logging.getLogger(__name__)
 
 
+@rol_requerido('ADMIN', 'NUTRICIONISTA')
 # Listar todos los alimentos
 def listar_alimentos(request):
     alimentos = Alimento.objects.all().order_by("nombre")
@@ -20,6 +23,7 @@ def listar_alimentos(request):
     )
 
 
+@rol_requerido('ADMIN', 'NUTRICIONISTA')
 # Registrar un alimento
 def crear_alimento(request):
     if request.method == "POST":
@@ -45,6 +49,7 @@ def crear_alimento(request):
     )
 
 
+@rol_requerido('ADMIN', 'NUTRICIONISTA')
 # Editar un alimento
 def editar_alimento(request, id):
     alimento = get_object_or_404(Alimento, pk=id)
@@ -77,6 +82,7 @@ def editar_alimento(request, id):
     )
 
 
+@rol_requerido('ADMIN', 'NUTRICIONISTA')
 # Eliminar un alimento sin borrar sus comidas relacionadas
 def eliminar_alimento(request, id):
     alimento = get_object_or_404(Alimento, pk=id)

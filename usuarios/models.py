@@ -4,6 +4,8 @@ from django.contrib.auth.hashers import make_password, check_password
 
 class Usuario(models.Model):
 
+    USERNAME_FIELD = "correo"
+
     ROLES = [
         ("ADMIN", "Administrador"),
         ("CLIENTE", "Cliente"),
@@ -69,6 +71,12 @@ class Usuario(models.Model):
         default=True
     )
 
+    last_login = models.DateTimeField(
+        blank=True,
+        null=True,
+        verbose_name="Última sesión"
+    )
+
     fecha_registro = models.DateTimeField(
         auto_now_add=True
     )
@@ -78,6 +86,27 @@ class Usuario(models.Model):
 
     def verificar_password(self, password):
         return check_password(password, self.password)
+
+    @property
+    def is_authenticated(self):
+        return True
+
+    @property
+    def is_anonymous(self):
+        return False
+
+    @property
+    def is_active(self):
+        return self.activo
+
+    def get_username(self):
+        return self.correo
+
+    def get_session_auth_hash(self):
+        return self.password
+
+    def tiene_rol(self, *roles):
+        return self.rol in roles
 
     def __str__(self):
         return f"{self.nombre} {self.apellido}"

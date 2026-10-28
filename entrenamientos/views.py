@@ -4,12 +4,15 @@ from django.contrib import messages
 from django.db import IntegrityError
 from django.shortcuts import render, redirect, get_object_or_404
 
+from usuarios.decorators import rol_requerido
+
 from .forms import EjercicioForm
 from .models import Ejercicio
 
 logger = logging.getLogger(__name__)
 
 
+@rol_requerido('ADMIN', 'ENTRENADOR')
 # Listar todos los ejercicios
 def listar_ejercicios(request):
     ejercicios = Ejercicio.objects.all().order_by("nombre")
@@ -20,6 +23,7 @@ def listar_ejercicios(request):
     )
 
 
+@rol_requerido('ADMIN', 'ENTRENADOR')
 # Registrar un ejercicio
 def crear_ejercicio(request):
     if request.method == "POST":
@@ -45,6 +49,7 @@ def crear_ejercicio(request):
     )
 
 
+@rol_requerido('ADMIN', 'ENTRENADOR')
 # Editar un ejercicio
 def editar_ejercicio(request, id):
     ejercicio = get_object_or_404(Ejercicio, pk=id)
@@ -77,6 +82,7 @@ def editar_ejercicio(request, id):
     )
 
 
+@rol_requerido('ADMIN', 'ENTRENADOR')
 # Eliminar un ejercicio sin borrar sus rutinas relacionadas
 def eliminar_ejercicio(request, id):
     ejercicio = get_object_or_404(Ejercicio, pk=id)
