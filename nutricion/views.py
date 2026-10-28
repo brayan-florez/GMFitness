@@ -23,7 +23,7 @@ def listar_alimentos(request):
 # Registrar un alimento
 def crear_alimento(request):
     if request.method == "POST":
-        form = AlimentoForm(request.POST)
+        form = AlimentoForm(request.POST, request.FILES)
 
         if form.is_valid():
             try:
@@ -50,7 +50,7 @@ def editar_alimento(request, id):
     alimento = get_object_or_404(Alimento, pk=id)
 
     if request.method == "POST":
-        form = AlimentoForm(request.POST, instance=alimento)
+        form = AlimentoForm(request.POST, request.FILES, instance=alimento)
 
         if form.is_valid():
             try:

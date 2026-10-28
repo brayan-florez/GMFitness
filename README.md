@@ -11,8 +11,13 @@ Aplicación web de gestión para un gimnasio, desarrollada con Django.
 - `profesionales/`: entrenadores, nutricionistas y fisioterapeutas.
 - `entrenamientos/`: ejercicios y rutinas.
 - `nutricion/`: alimentos y planes de alimentación.
-- Cada app mantiene juntos los componentes que ya están implementados para su dominio: modelos, formularios, vistas, rutas, administración, migraciones y plantillas.
+- `membresias/`: planes por sede, beneficios, precios por periodo e historial de membresías.
+- `pagos/`: pagos y recibos internos asociados a una membresía.
+- `citas/`: disponibilidades de fisioterapia y reservas de clientes.
+- Las apps separan los dominios; las entidades nuevas quedan gestionables desde el administrador de Django y sus modelos/migraciones viven en la app correspondiente.
 - `gimnasios/templates/base.html` contiene la estructura y navegación compartidas por las páginas.
+
+Las dietas y rutinas oficiales se guardan en la base de datos. Las propuestas personales que el cliente cree en su navegador no se guardan en el servidor por ahora. La aprobación de pagos disponible en el administrador es una simulación interna y emite un recibo; no integra una pasarela bancaria.
 
 Las apps se mantienen separadas por responsabilidad del dominio; las rutas principales las reúne `config/urls.py`, siguiendo el esquema de entrada de `sena`.
 

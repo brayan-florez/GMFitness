@@ -6,6 +6,18 @@
         <a href="{% url 'crear_ejercicio' %}">Registrar nuevo ejercicio</a>
     </p>
 
+    <form method="get" class="panel" style="margin: 1rem 0">
+        <label for="grupo">Filtrar por grupo muscular</label>
+        <select id="grupo" name="grupo">
+            <option value="">Todos los grupos</option>
+            {% for grupo in grupos_musculares %}
+                <option value="{{ grupo.id }}" {% if grupo.id|stringformat:"s" == grupo_seleccionado %}selected{% endif %}>{{ grupo.nombre }}</option>
+            {% endfor %}
+        </select>
+        <button type="submit">Buscar</button>
+        {% if grupo_seleccionado %}<a href="{% url 'listar_ejercicios' %}">Limpiar</a>{% endif %}
+    </form>
+
     <hr>
 
     {% if ejercicios %}
@@ -15,6 +27,7 @@
                     <th>ID</th>
                     <th>Nombre</th>
                     <th>Grupo muscular</th>
+                    <th>Equipamiento</th>
                     <th>Dificultad</th>
                     <th>Imagen</th>
                     <th>Estado</th>
@@ -26,7 +39,8 @@
                     <tr>
                         <td>{{ ejercicio.id }}</td>
                         <td>{{ ejercicio.nombre }}</td>
-                        <td>{{ ejercicio.grupo_muscular }}</td>
+                        <td>{{ ejercicio.grupo.nombre }}</td>
+                        <td>{{ ejercicio.equipamientos.all|join:", "|default:"No requiere" }}</td>
                         <td>{{ ejercicio.get_dificultad_display }}</td>
                         <td>
                             {% if ejercicio.imagen %}

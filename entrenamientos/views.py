@@ -5,18 +5,27 @@ from django.db import IntegrityError
 from django.shortcuts import render, redirect, get_object_or_404
 
 from .forms import EjercicioForm
-from .models import Ejercicio
+from .models import Ejercicio, GrupoMuscular
 
 logger = logging.getLogger(__name__)
 
 
 # Listar todos los ejercicios
 def listar_ejercicios(request):
-    ejercicios = Ejercicio.objects.all().order_by("nombre")
+    ejercicios = Ejercicio.objects.select_related("grupo").prefetch_related(
+        "equipamientos"
+    ).order_by("nombre")
+    grupo_id = request.GET.get("grupo")
+    if grupo_id:
+        ejercicios = ejercicios.filter(grupo_id=grupo_id)
     return render(
         request,
         "ejercicios/listar_ejercicios.html",
-        {"ejercicios": ejercicios}
+        {
+            "ejercicios": ejercicios,
+            "grupos_musculares": GrupoMuscular.objects.filter(activo=True),
+            "grupo_seleccionado": grupo_id or "",
+        }
     )
 
 

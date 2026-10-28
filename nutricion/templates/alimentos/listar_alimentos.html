@@ -14,6 +14,10 @@
                 <tr>
                     <th>ID</th>
                     <th>Nombre</th>
+                    <th>Calorías</th>
+                    <th>Proteínas</th>
+                    <th>Carbohidratos</th>
+                    <th>Grasas</th>
                     <th>Descripción</th>
                     <th>Estado</th>
                     <th>Acciones</th>
@@ -24,6 +28,10 @@
                     <tr>
                         <td>{{ alimento.id }}</td>
                         <td>{{ alimento.nombre }}</td>
+                        <td>{{ alimento.calorias }} kcal / {{ alimento.porcion_referencia }} {{ alimento.unidad_porcion }}</td>
+                        <td>{{ alimento.proteinas }} g</td>
+                        <td>{{ alimento.carbohidratos }} g</td>
+                        <td>{{ alimento.grasas }} g</td>
                         <td>{{ alimento.descripcion|default:"No registrada" }}</td>
                         <td>
                             {% if alimento.activo %}

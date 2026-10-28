@@ -1,0 +1,34 @@
+{% extends "base.html" %}
+{% block title %}{{ title }} | GMFitness{% endblock %}
+{% block content %}
+<section class="panel">
+    <h1>{{ title }}</h1>
+    {% if not read_only %}<p><a class="button" href="{{ create_url }}">Crear registro</a></p>{% endif %}
+    <form method="get" class="panel" style="margin: 1rem 0">
+        <label for="q">Buscar</label>
+        <input id="q" type="search" name="q" value="{{ query }}">
+        <button type="submit">Buscar</button>
+        {% if query %}<a href="{{ list_url }}">Limpiar</a>{% endif %}
+    </form>
+    {% if rows %}
+        <div style="overflow-x:auto">
+        <table>
+            <thead><tr>{% for column in columns %}<th>{{ column }}</th>{% endfor %}{% if not read_only or action_label %}<th>Acciones</th>{% endif %}</tr></thead>
+            <tbody>
+                {% for row in rows %}
+                    <tr>
+                        {% for cell in row.cells %}<td>{{ cell|default:"—" }}</td>{% endfor %}
+                        {% if not read_only or action_label %}<td>
+                            {% if not read_only %}<a href="{{ row.edit_url }}">Editar</a> · <a href="{{ row.delete_url }}">{{ delete_label }}</a>{% endif %}
+                            {% if action_label and row.show_action %}<form method="post" action="{{ row.action_url }}" style="display:inline">{% csrf_token %}<button type="submit">{{ action_label }}</button></form>{% endif %}
+                        </td>{% endif %}
+                    </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+        </div>
+    {% else %}
+        <p>No hay registros para mostrar.</p>
+    {% endif %}
+</section>
+{% endblock %}

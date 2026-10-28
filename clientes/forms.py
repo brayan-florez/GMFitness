@@ -1,7 +1,8 @@
 
 from django import forms
+from django.db.models import Q
 
-from .models import Cliente, Objetivo
+from .models import Cliente, MedicionFisica, Objetivo
 from usuarios.models import Usuario
 from gimnasios.models import Sede
 
@@ -112,4 +113,55 @@ class ObjetivoForm(forms.ModelForm):
                 attrs={"class": "form-control", "rows": 4}
             ),
             "activo": forms.CheckboxInput(attrs={"class": "form-check-input"}),
+        }
+
+
+class ClienteProfileForm(forms.ModelForm):
+    usuario = forms.ModelChoiceField(
+        label="Usuario del cliente",
+        queryset=Usuario.objects.none(),
+    )
+
+    class Meta:
+        model = Cliente
+        fields = ("usuario", "objetivo", "activo")
+        labels = {
+            "objetivo": "Objetivo principal",
+            "activo": "Cliente activo",
+        }
+
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        usuarios = Usuario.objects.filter(rol="CLIENTE")
+        if self.instance.pk:
+            usuarios = usuarios.filter(
+                Q(perfil_cliente__isnull=True)
+                | Q(pk=self.instance.usuario_id)
+            )
+        else:
+            usuarios = usuarios.filter(perfil_cliente__isnull=True)
+        self.fields["usuario"].queryset = usuarios.order_by("apellido", "nombre")
+
+    def clean_usuario(self):
+        usuario = self.cleaned_data["usuario"]
+        if usuario.rol != "CLIENTE":
+            raise forms.ValidationError("El usuario seleccionado debe tener rol de cliente.")
+        return usuario
+
+
+class MedicionFisicaForm(forms.ModelForm):
+    class Meta:
+        model = MedicionFisica
+        exclude = ("imc", "fecha_medicion")
+        labels = {
+            "cliente": "Cliente",
+            "peso": "Peso (kg)",
+            "altura": "Altura (m)",
+            "porcentaje_grasa": "Porcentaje de grasa (%)",
+            "cintura": "Cintura (cm)",
+            "pecho": "Pecho (cm)",
+            "brazo": "Brazo (cm)",
+            "cadera": "Cadera (cm)",
+            "muslo": "Muslo (cm)",
+            "observaciones": "Observaciones",
         }

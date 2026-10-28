@@ -44,6 +44,9 @@ INSTALLED_APPS = [
     "profesionales",
     "entrenamientos",
     "nutricion",
+    "membresias",
+    "pagos",
+    "citas",
 ]
 
 MIDDLEWARE = [

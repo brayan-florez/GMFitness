@@ -115,6 +115,11 @@ class MedicionFisicaAdmin(admin.ModelAdmin):
         "peso",
         "altura",
         "imc",
+        "porcentaje_grasa",
+        "brazo",
+        "cintura",
+        "cadera",
+        "muslo",
         "fecha_medicion",
     )
 

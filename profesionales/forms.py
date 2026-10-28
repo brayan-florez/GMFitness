@@ -1,5 +1,6 @@
 
 from django import forms
+from django.db.models import Q
 from .models import Entrenador, Nutricionista, Fisioterapeuta
 from usuarios.models import Usuario
 from gimnasios.models import Sede
@@ -273,3 +274,55 @@ class FisioterapeutaCreationForm(forms.ModelForm):
             )
 
         return cleaned_data
+
+
+class PerfilProfesionalFormMixin:
+    rol_requerido = None
+    relacion_perfil = None
+
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        usuarios = Usuario.objects.filter(rol=self.rol_requerido)
+        if self.instance.pk:
+            usuarios = usuarios.filter(
+                Q(**{f"{self.relacion_perfil}__isnull": True})
+                | Q(pk=self.instance.usuario_id)
+            )
+        else:
+            usuarios = usuarios.filter(
+                **{f"{self.relacion_perfil}__isnull": True}
+            )
+        self.fields["usuario"].queryset = usuarios.order_by("apellido", "nombre")
+
+    def clean_usuario(self):
+        usuario = self.cleaned_data["usuario"]
+        if usuario.rol != self.rol_requerido:
+            raise forms.ValidationError("El usuario no tiene el rol requerido para este perfil.")
+        return usuario
+
+
+class EntrenadorProfileForm(PerfilProfesionalFormMixin, forms.ModelForm):
+    rol_requerido = "ENTRENADOR"
+    relacion_perfil = "perfil_entrenador"
+
+    class Meta:
+        model = Entrenador
+        fields = ("usuario", "especialidad", "experiencia", "descripcion", "activo")
+
+
+class NutricionistaProfileForm(PerfilProfesionalFormMixin, forms.ModelForm):
+    rol_requerido = "NUTRICIONISTA"
+    relacion_perfil = "perfil_nutricionista"
+
+    class Meta:
+        model = Nutricionista
+        fields = ("usuario", "especialidad", "registro_profesional", "experiencia", "descripcion", "activo")
+
+
+class FisioterapeutaProfileForm(PerfilProfesionalFormMixin, forms.ModelForm):
+    rol_requerido = "FISIOTERAPEUTA"
+    relacion_perfil = "perfil_fisioterapeuta"
+
+    class Meta:
+        model = Fisioterapeuta
+        fields = ("usuario", "especialidad", "registro_profesional", "experiencia", "descripcion", "activo")
